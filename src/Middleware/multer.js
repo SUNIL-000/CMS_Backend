@@ -3,9 +3,9 @@ import { v4 as uuid } from "uuid";
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    const uploadDir = "uploads";
+    
 
-    cb(null, uploadDir);
+    cb(null, "../Frontend/public/images")
   },
   filename(req, file, cb) {
     const id = uuid();

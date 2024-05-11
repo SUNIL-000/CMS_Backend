@@ -10,7 +10,7 @@ const missingPersonSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Other"],
+    enum: ["male", "female", "other"],
     required: true,
   },
   city: {
@@ -21,20 +21,18 @@ const missingPersonSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  reported_by: {
-    name: {
-      type: String,
-    //   required: true,
-    },
-    contact: {
-      type: String,
-    //   required: true,
-    },
+  reported_by_name: {
+    type: String,
+    required: true,
+  },
+  reported_by_contact: {
+    type: Number,
+    required: true,
   },
   status: {
     type: String,
     enum: ["missing", "found", "resolved"],
-    default:"missing",
+    default: "missing",
     required: true,
   },
   photo: {
@@ -43,5 +41,7 @@ const missingPersonSchema = new mongoose.Schema({
   },
 });
 
-export const MissingPerson = mongoose.model("MissingPerson", missingPersonSchema);
-
+export const MissingPerson = mongoose.model(
+  "MissingPerson",
+  missingPersonSchema
+);
