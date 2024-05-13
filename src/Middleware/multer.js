@@ -17,4 +17,4 @@ const storage = multer.diskStorage({
   },
 });
 
-export const SingleUpload = multer({ storage }).single("photo");
+export const MissingUpload = multer({ storage }).single("photo_url");

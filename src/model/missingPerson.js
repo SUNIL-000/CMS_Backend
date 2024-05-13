@@ -17,7 +17,7 @@ const missingPersonSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  date_missing: {
+  missing_date: {
     type: Date,
     required: true,
   },
@@ -35,9 +35,9 @@ const missingPersonSchema = new mongoose.Schema({
     default: "missing",
     required: true,
   },
-  photo: {
+  photo_url: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 
