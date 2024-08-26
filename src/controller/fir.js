@@ -193,27 +193,27 @@ export const singleRecord = async (req, res) => {
 export const searchRecord = async (req, res) => {
   try {
     const { adhaar } = req.query;
-
-    // const regex = new RegExp(adhaarNumber, 'i'); // 'i' is for case-insensitive search
-
-    const fir = await Fir.find({ adhaar });
-    if (fir === null) {
-      return res.json({
+    const fir = await Fir.find({ adhaar });   
+    if (fir.length === 0) {
+      return res.status(404).json({
         success: true,
-        message: "Record not found",
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "1 Record found",
-        fir,
+        message: "No record found",
       });
     }
+
+    // If records are found
+    return res.status(200).json({
+      success: true,
+      message: `${fir.length} Record(s) found`,
+      fir,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Error while searching record:", error); 
     return res.status(500).json({
       success: false,
-      message: "Error while searching record",
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
+

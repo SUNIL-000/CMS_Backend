@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
+import { config } from "../config/config.js";
+
 
 export const DBconnect = async () => {
   try {
-    const conn = await mongoose.connect(
-      "mongodb+srv://sunilsahoosks2002:sunil000@cluster0.9afxkke.mongodb.net/cms"
-    );
+    const conn = await mongoose.connect(config.db.connectionURI)
 
-    console.log(`db connected ${conn.connection.host}`);
+    console.log(`db connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log("error while connecting to the database");
+    console.log("Error while connecting to the database");
     console.error(error);
   }
 };
