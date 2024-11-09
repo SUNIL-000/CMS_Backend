@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
   destination(req, file, cb) {
     
 
-    cb(null, "../Frontend/public/images")
+    cb(null, "Images/")
   },
   filename(req, file, cb) {
     const id = uuid();
@@ -17,4 +17,4 @@ const storage = multer.diskStorage({
   },
 });
 
-export const MissingUpload = multer({ storage }).single("photo_url");
+export const upload = multer({ storage });
