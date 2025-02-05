@@ -16,13 +16,15 @@ app.use(express.json());
 // app.use(express.json({ limit: "100mb" }));
 app.use(morgan("dev"));
 app.use(cors());
-app.use("Images", express.static("Images"));
+app.use("./public", express.static("public"));
 
 //////////////////user apis//////////
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/fir", firRoutes);
 app.use("/api/v1/missing", missingPerson);
-
+app.get("/home",(req,res)=>{
+  res.json("hey iam working fine")
+})
 
 
 app.listen(config?.port || 5000, () => {

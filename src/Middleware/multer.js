@@ -5,9 +5,11 @@ const storage = multer.diskStorage({
   destination(req, file, cb) {
     
 
-    cb(null, "Images/")
+    cb(null, "public/")
   },
   filename(req, file, cb) {
+    console.log(file);
+    
     const id = uuid();
     const lastName = file.originalname.split(".").pop();
     console.log(lastName);

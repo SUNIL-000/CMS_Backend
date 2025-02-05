@@ -54,30 +54,21 @@ export const newFir = async (req, res) => {
 ////////////////update fir/////////////////
 export const deleteFir = async (req, res) => {
   try {
-    const { id } = await req.params;
-    const deletefir = await Fir.findById(id);
-    console.log(deletefir);
-    await deletefir.deleteOne();
+    const { id } = req.params;
 
-    if (deletefir == null) {
-      return res.json({
-        success: true,
-        message: "Failed to getting result",
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Record deleted successfully",
-      });
+    const deletefir = await Fir.findByIdAndDelete(id);
+    if (!deletefir) {
+      return res.json({ success: false, message: "Record not found" });
     }
+
+    return res.status(200).json({ success: true, message: "Record deleted successfully" });
+
   } catch (error) {
-    console.log(error);
-    return res.json({
-      success: false,
-      message: "error while creating record...",
-    });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error deleting record" });
   }
 };
+
 
 ////////////GET ALL RECORD///////////////
 export const allFir = async (req, res) => {

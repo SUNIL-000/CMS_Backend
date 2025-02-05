@@ -1,3 +1,4 @@
+import { uploadTOCloudinary } from "../cloudinary/cloudinary.js";
 import { MissingPerson } from "../model/missingPerson.js";
 
 // Create a new missing person record
@@ -14,52 +15,53 @@ export const createMissingPerson = async (req, res) => {
       status,
     } = req.body;
     console.log(req.body);
-    const photo_url = req.file.filename;
-    // console.log(photo_url)
-    // console.log(photo_url.path);
+    console.log(req.file)
+    // console.log(req.files)
+    // const photo_url = req.file.filename;
 
-    if (!photo_url) {
-      return res.json({
-        success: false,
-        message: "Please upload a photo_url",
-      });
-    }
+    // if (!photo_url) {
+    //   return res.json({
+    //     success: false,
+    //     message: "Please upload a photo",
+    //   });
+    // }
+    // const cldurl = await uploadTOCloudinary(photo_url?.path)
 
-    if (
-      !name ||
-      !age ||
-      !gender ||
-      !city ||
-      !missing_date ||
-      !reported_by_name ||
-      !reported_by_contact ||
-      !status
-    ) {
-      return res.json({
-        success: false,
-        message: "Please fill all the required fields",
-      });
-    }
+    // if (
+    //   !name ||
+    //   !age ||
+    //   !gender ||
+    //   !city ||
+    //   !missing_date ||
+    //   !reported_by_name ||
+    //   !reported_by_contact ||
+    //   !status
+    // ) {
+    //   return res.json({
+    //     success: false,
+    //     message: "Please fill all the required fields",
+    //   });
+    // }
 
-    const newMissingPerson = new MissingPerson({
-      name,
-      age,
-      gender,
-      city,
-      missing_date,
-      reported_by_name,
-      reported_by_contact,
-      status,
-      photo_url,
-    });
+    // const newMissingPerson = new MissingPerson({
+    //   name,
+    //   age,
+    //   gender,
+    //   city,
+    //   missing_date,
+    //   reported_by_name,
+    //   reported_by_contact,
+    //   status,
+    //   photo_url : cldurl?.url || "",
+    // });
 
-    await newMissingPerson.save();
+    // await newMissingPerson.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Missing person record created successfully",
-      newMissingPerson,
-    });
+    // res.status(201).json({
+    //   success: true,
+    //   message: "Missing person record created successfully",
+    //   newMissingPerson,
+    // });
   } catch (error) {
     console.error("Error creating missing person record:", error);
     res.status(500).json({
@@ -81,8 +83,8 @@ export const updateMissingPerson = async (req, res) => {
       reported_by_name,
       reported_by_contact,
       status,
-    } =  req.body;
-    const { id } =  req.params;
+    } = req.body;
+    const { id } = req.params;
     console.log(id);
 
     console.log(

@@ -1,80 +1,64 @@
 import { User } from "../model/user.js";
 
+import bcrypt from "bcrypt";  // 🔹 Import bcrypt for password hashing
+
 export const SignupController = async (req, res) => {
   try {
-    const { name, userid, email, password, role } = await req.body;
+    const { name, userid, email, password, role } = req.body;
 
-    const euser = await User.findOne({ userid: userid });
-    console.log(euser);
+    // Check if user already exists
+    const euser = await User.findOne({ userid });
     if (euser) {
-      return res.json({
-        success: true,
-        message: "userid already registered...",
-      });
-    } else {
-      const newuser = await User.create({
-        name,
-        userid,
-        email,
-        password,
-        role,
-      });
-      await newuser.save();
-      console.log(newuser);
-
-      return res.status(201).json({
-        success: true,
-        message: "User created successfully...please login",
-      });
+      return res.json({ success: false, message: "User ID already registered" });
     }
-  } catch (error) {
-    return res.status(400).json({
-      message: "Error While creating new user",
-      error,
+
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      userid,
+      email,
+      password: hashedPassword,  // Store hashed password
+      role,
     });
+
+    res.status(201).json({ success: true, message: "User created successfully, please login" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error while creating user!!!", error });
   }
 };
+
 
 export const Login = async (req, res) => {
   try {
-    const { userid, password } = await req.body;
+    const { userid, password } = req.body;
 
-    const euser = await User.findOne({ userid: userid });
-    if (euser == null) {
-      return res.json({
-        success: false,
-        message: "Please register first",
-      });
+    const euser = await User.findOne({ userid });
+    if (!euser) {
+      return res.json({ success: false, message: "Please register first" });
     }
-    console.log(euser);
-    if (userid == euser.userid && password == euser.password) {
-      if (euser.role == "admin") {
-        return res.json({
-          success: true,
-          message: "Login successfully..",
-          euser,
-        });
-      } else {
-        return res.json({
-          success: false,
-          message: "Unable to Login .. Contact to admin first",
-          
-        });
-      }
-    } else if (userid != euser.userid || password != euser.password) {
-      return res.json({
-        success: false,
-        message: "Credential mismatch login again..",
-      });
+
+    // Compare hashed password
+    const isMatch = await bcrypt.compare(password, euser.password);
+    if (!isMatch) {
+      return res.json({ success: false, message: "Credential mismatch, login again" });
     }
+
+    if (euser.role === "admin") {
+      return res.json({ success: true, message: "Login successful", euser });
+    } else {
+      return res.json({ success: false, message: "Unable to login, contact admin" });
+    }
+
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({
-      message: "Error While creating new user",
-      error,
-    });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error logging in", error });
   }
 };
+
 
 export const allUser = async (req, res) => {
   try {

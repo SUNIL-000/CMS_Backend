@@ -3,11 +3,11 @@ import { config } from "../config/config.js";
 
 export const DBconnect = async () => {
   try {
-    const conn = await mongoose.connect(config.db.connectionURI)
+    const conn = await mongoose.connect(config.db.connectionURI);
 
-    console.log(`db connected: ${conn?.connection?.host}`);
+    console.log(`✅ Database Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log("Error while connecting to the database");
-    console.error(error);
+    console.error("❌ Database Connection Error:", error);
+    process.exit(1);  // Stop server if DB fails
   }
 };
