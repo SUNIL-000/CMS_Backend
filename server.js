@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 app.use("./public", express.static("public"));
+app.use("./Photos", express.static("Photos"));
 
 //////////////////user apis//////////
 app.use("/api/v1/user", userRoutes);

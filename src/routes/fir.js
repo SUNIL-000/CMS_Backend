@@ -6,6 +6,7 @@ export const firRoutes=express.Router();
 
 
 firRoutes.post("/new",newFir)
+
 firRoutes.delete("/:id",deleteFir)
 firRoutes.get("/all",allFir)
 firRoutes.put("/:id",editFir)

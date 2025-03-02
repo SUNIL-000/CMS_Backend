@@ -51,6 +51,7 @@ const FirSchema = new mongoose.Schema({
     type: Number,
     require: true,
   },
+ 
 });
 
 export const Fir = mongoose.model("fir", FirSchema);

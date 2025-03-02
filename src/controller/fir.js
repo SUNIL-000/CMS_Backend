@@ -1,3 +1,4 @@
+
 import { Fir } from "../model/fir.js";
 
 export const newFir = async (req, res) => {
@@ -15,7 +16,8 @@ export const newFir = async (req, res) => {
       caseno,
       bailstatus,
       jailterm,
-    } = await req.body;
+    } =  await req.body;
+   
     const newfir = await Fir.create({
       name,
       adhaar,
@@ -29,24 +31,27 @@ export const newFir = async (req, res) => {
       caseno,
       bailstatus,
       jailterm,
+     
     });
     if (newfir == null) {
+      console.log("no able to create")
       return res.json({
         success: false,
-        message: "Failed to register record",
+        message: "Failed to register Fir",
       });
     } else {
+      console.log("Fir saved successfully")
       return res.status(201).json({
         success: true,
-        message: "Record saved successfully",
-        newfir,
+        message: "Fir saved successfully",
+        
       });
     }
   } catch (error) {
     console.log(error);
-    return res.json({
+    return res.status(500).json({
       success: false,
-      message: "error while creating record...",
+      message: "error while registering record",
     });
   }
 };
@@ -183,23 +188,30 @@ export const singleRecord = async (req, res) => {
 };
 export const searchRecord = async (req, res) => {
   try {
-    const { adhaar } = req.query;
-    const fir = await Fir.find({ adhaar });   
-    if (fir.length === 0) {
-      return res.status(404).json({
-        success: true,
+    const { name } = req.query;
+    let query = {};
+
+    if (name) {
+      query.name = { $regex: new RegExp(name, "i") }; // Case-insensitive search
+    }
+
+    const fir = await Fir.find(query);
+
+    if (!fir || fir.length === 0) {
+      return res.status(200).json({
+        success: false,
         message: "No record found",
+        fir: [],
       });
     }
 
-    // If records are found
     return res.status(200).json({
       success: true,
       message: `${fir.length} Record(s) found`,
       fir,
     });
   } catch (error) {
-    console.error("Error while searching record:", error); 
+    console.error("Error while searching record:", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -207,4 +219,7 @@ export const searchRecord = async (req, res) => {
     });
   }
 };
+
+
+
 

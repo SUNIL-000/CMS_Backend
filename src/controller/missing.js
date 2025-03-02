@@ -192,3 +192,25 @@ export const deleteSingleMissingPersons = async (req, res) => {
     });
   }
 };
+export const searchMissingPersons = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    let query = {};
+    if (name) {
+      query.name = { $regex: new RegExp(name, "i") }; // Case-insensitive search
+    }
+
+    const missingPersons = await MissingPerson.find(query);
+
+    res.status(200).json({
+      success: true,
+      missingPersons,
+    });
+  } catch (error) {
+    console.error("Error fetching missing persons:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+

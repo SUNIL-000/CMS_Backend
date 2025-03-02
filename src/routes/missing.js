@@ -1,5 +1,5 @@
 import express from "express"
-import { createMissingPerson, deleteSingleMissingPersons, getAllMissingPersons, getSingleMissingPersons, updateMissingPerson } from "../controller/missing.js";
+import { createMissingPerson, deleteSingleMissingPersons, getAllMissingPersons, getSingleMissingPersons, searchMissingPersons, updateMissingPerson } from "../controller/missing.js";
 import {  upload } from "../Middleware/multer.js";
 
 export const missingPerson=express.Router();
@@ -11,6 +11,7 @@ missingPerson.get("/all",getAllMissingPersons)
 missingPerson.get("/single/:id",getSingleMissingPersons)
 missingPerson.put("/:id",updateMissingPerson)
 missingPerson.delete("/:id",deleteSingleMissingPersons)
+missingPerson.get("/search", searchMissingPersons);
 
 
 
