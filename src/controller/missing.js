@@ -74,57 +74,46 @@ export const createMissingPerson = async (req, res) => {
 //////UPDATE SINGLE RECORD //////
 export const updateMissingPerson = async (req, res) => {
   try {
-    console.log("update")
-    const {
-      name,
-      age,
-      gender,
-      city,
-      missing_date,
-      reported_by_name,
-      reported_by_contact,
-      status,
-    } = req.body;
+    console.log("Updating missing person...");
     const { id } = req.params;
-    console.log(id);
 
-    console.log(
-      name,
-      age,
-      gender,
-      city,
-      missing_date,
-      reported_by_name,
-      reported_by_contact,
-      status
+    // Validate ID
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Missing ID" });
+    }
+
+    // Extract only the allowed fields
+    const { name, age, status } = req.body;
+
+    // Update the record and return the updated document
+    const updatedPerson = await MissingPerson.findByIdAndUpdate(
+      id,
+      { name, age, status },
+      { new: true, runValidators: true } // Ensures the new updated document is returned
     );
 
-
-
-    const updateMissingPerson = await MissingPerson.findByIdAndUpdate(id, {
-      name,
-      age,
-      gender,
-      city,
-      missing_date,
-      reported_by_name,
-      reported_by_contact,
-      status,
-    });
-
-    await updateMissingPerson.save();
+    if (!updatedPerson) {
+      return res.status(404).json({
+        success: false,
+        message: "Missing person not found",
+      });
+    }
 
     res.status(200).json({
       success: true,
       message: "Record updated successfully",
+      updatedPerson,
     });
   } catch (error) {
     console.error("Error while updating missing person record:", error);
     res.status(500).json({
-      message: "An error occurred while updating missing person record",
+      success: false,
+      message: "An error occurred while updating the record",
     });
   }
 };
+
+
 
 // Get all missing person records
 export const getAllMissingPersons = async (req, res) => {
