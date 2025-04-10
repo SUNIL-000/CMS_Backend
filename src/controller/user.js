@@ -1,33 +1,46 @@
 import { User } from "../model/user.js";
+import bcrypt from "bcrypt";
 
-import bcrypt from "bcrypt";  // 🔹 Import bcrypt for password hashing
+// utils/generateUserId.js
+export const generateUserId = (name = "user") => {
+  const prefix = name.trim().toLowerCase().split(" ")[0].substring(0, 6);
+  const unique = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}${unique}`; // e.g. sunil8347
+};
+
+
 
 export const SignupController = async (req, res) => {
   try {
-    const { name, userid, email, password, role } = req.body;
+    const { name, email, password, role } = req.body;
 
-    // Check if user already exists
-    const euser = await User.findOne({ userid });
-    if (euser) {
-      return res.json({ success: false, message: "User ID already registered" });
+    // Auto-generate user ID
+    let userid = generateUserId(name);
+
+    // Ensure uniqueness
+    while (await User.findOne({ userid })) {
+      userid = generateUserId(name); // Regenerate if duplicate
     }
 
-    // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
       name,
       userid,
       email,
-      password: hashedPassword,  // Store hashed password
+      password: hashedPassword,
       role,
     });
 
-    res.status(201).json({ success: true, message: "User created successfully, please login" });
+    res.status(201).json({
+      success: true,
+      message: "User created successfully. Please login.",
+      userid, // Send userid to frontend
+    });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error while creating user!!!", error });
+    res.status(500).json({ success: false, message: "Error while creating user!", error });
   }
 };
 
@@ -38,19 +51,19 @@ export const Login = async (req, res) => {
 
     const euser = await User.findOne({ userid });
     if (!euser) {
-      return res.json({ success: false, message: "Please register first" });
+      return res.json({ success: false, message: "You are not registered yet" });
     }
 
     // Compare hashed password
     const isMatch = await bcrypt.compare(password, euser.password);
     if (!isMatch) {
-      return res.json({ success: false, message: "Credential mismatch, login again" });
+      return res.json({ success: false, message: "Credential mismatch" });
     }
 
     if (euser.role === "admin") {
       return res.json({ success: true, message: "Login successful", euser });
     } else {
-      return res.json({ success: false, message: "Unable to login, contact admin" });
+      return res.json({ success: false, message: "Unable to access, wait for admin approval" });
     }
 
   } catch (error) {
