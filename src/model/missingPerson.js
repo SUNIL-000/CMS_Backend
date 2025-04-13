@@ -31,7 +31,7 @@ const missingPersonSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["missing", "found", "resolved"],
+    enum: ["missing", "pending", "found"],
     default: "missing",
     required: true,
   },

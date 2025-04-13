@@ -1,57 +1,86 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const FirSchema = new mongoose.Schema({
-  name: {
+  State: {
     type: String,
-    require: true,
+    required: true,
   },
-  adhaar: {
-    type: Number,
-    require: true,
-  },
-  gender: {
+  District: {
     type: String,
-    require: true,
-    enum: ["male", "female"],
+    required: true,
   },
-  panelcode: {
+  PoliceStation: {
     type: String,
-    require: true,
+    required: true,
   },
-  age: {
-    type: Number,
-    require: true,
-  },
-  state: {
+  FIRno: {
     type: String,
-    require: true,
+    required: true,
   },
-  city: {
+  Date: {
+    type: Date,
+    required: true,
+  },
+  Act1: {
     type: String,
-    require: true,
+    required: true,
   },
-  nationality: {
+  Sections1: {
     type: String,
-    require: true,
+    required: true,
   },
-  offence: {
+  NameOfSuspect: {
     type: String,
-    require: true,
+    required: true,
   },
-  caseno: {
+  OccurenceDay: {
     type: String,
-    require: true,
+    required: true,
   },
-  bailstatus: {
+  OccurenceDate: {
+    type: Date,
+    required: true,
+  },
+  OccurenceTime: {
     type: String,
-    require: true,
-    enum: ["yes", "no"],
+    required: true,
   },
-  jailterm: {
-    type: Number,
-    require: true,
+  DirectionAndDistncefromPS: {
+    type: String,
+    required: true,
   },
- 
+  Address: {
+    type: String,
+    required: true,
+  },
+  ComplainantName: {
+    type: String,
+    required: true,
+  },
+  ComplainantFatherorHusbandName: {
+    type: String,
+    required: true,
+  },
+  ComplainantDateOfBirth: {
+    type: Date,
+    required: true,
+  },
+  ComplainantNationality: {
+    type: String,
+    required: true,
+  },
+  ComplainantOccupation: {
+    type: String,
+    required: true,
+  },
+  ComplainantAadharNo: {
+    type: String,
+    required: true,
+  },
+  ComplainantAddress: {
+    type: String,
+    required: true,
+  },
 });
 
-export const Fir = mongoose.model("fir", FirSchema);
+export const Fir = mongoose.model('Fir', FirSchema);

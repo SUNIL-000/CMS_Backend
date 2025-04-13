@@ -1,225 +1,126 @@
+import { Fir } from '../model/fir.js';
 
-import { Fir } from "../model/fir.js";
-
-export const newFir = async (req, res) => {
+// Create FIR Record
+export const createFir = async (req, res) => {
   try {
-    const {
-      name,
-      adhaar,
-      gender,
-      age,
-      panelcode,
-      state,
-      city,
-      nationality,
-      offence,
-      caseno,
-      bailstatus,
-      jailterm,
-    } =  await req.body;
-   
-    const newfir = await Fir.create({
-      name,
-      adhaar,
-      gender,
-      age,
-      panelcode,
-      state,
-      city,
-      nationality,
-      offence,
-      caseno,
-      bailstatus,
-      jailterm,
-     
-    });
-    if (newfir == null) {
-      console.log("no able to create")
-      return res.json({
-        success: false,
-        message: "Failed to register Fir",
-      });
-    } else {
-      console.log("Fir saved successfully")
-      return res.status(201).json({
-        success: true,
-        message: "Fir saved successfully",
-        
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "error while registering record",
-    });
-  }
-};
-
-////////////////update fir/////////////////
-export const deleteFir = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const deletefir = await Fir.findByIdAndDelete(id);
-    if (!deletefir) {
-      return res.json({ success: false, message: "Record not found" });
-    }
-
-    return res.status(200).json({ success: true, message: "Record deleted successfully" });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error deleting record" });
-  }
-};
-
-
-////////////GET ALL RECORD///////////////
-export const allFir = async (req, res) => {
-  try {
-    const allFir = await Fir.find({});
-
-    if (allFir == null) {
-      return res.json({
-        success: false,
-        message: "Failed to getting result",
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Record fetched successfully",
-        allFir,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.json({
-      success: false,
-      message: "error while getting record...",
-    });
-  }
-};
-
-/////////////UPDATE RECORD //////////////////
-export const editFir = async (req, res) => {
-  try {
-    const { id } = await req.params;
-    const {
-      name,
-      adhaar,
-      gender,
-      age,
-      panelcode,
-      state,
-      city,
-      nationality,
-      offence,
-      caseno,
-      bailstatus,
-      jailterm,
-    } = await req.body;
-    const editFir = await Fir.findByIdAndUpdate(id, {
-      name,
-      adhaar,
-      gender,
-      age,
-      panelcode,
-      state,
-      city,
-      nationality,
-      offence,
-      caseno,
-      bailstatus,
-      jailterm,
+    const fir = new Fir({
+      State: req.body.State,
+      District: req.body.District,
+      PoliceStation: req.body.PoliceStation,
+      FIRno: req.body.FIRno,
+      Date: req.body.Date,
+      Act1: req.body.Act1,
+      Sections1: req.body.Sections1,
+      NameOfSuspect: req.body.NameOfSuspect,
+      OccurenceDay: req.body.OccurenceDay,
+      OccurenceDate: req.body.OccurenceDate,
+      OccurenceTime: req.body.OccurenceTime,
+      DirectionAndDistncefromPS: req.body.DirectionAndDistncefromPS,
+      Address: req.body.Address,
+      ComplainantName: req.body.ComplainantName,
+      ComplainantFatherorHusbandName: req.body.ComplainantFatherorHusbandName,
+      ComplainantDateOfBirth: req.body.ComplainantDateOfBirth,
+      ComplainantNationality: req.body.ComplainantNationality,
+      ComplainantOccupation: req.body.ComplainantOccupation,
+      ComplainantAadharNo: req.body.ComplainantAadharNo,
+      ComplainantAddress: req.body.ComplainantAddress,
     });
 
-    if (editFir == null) {
-      // console.log(editFir);
-      return res.json({
-        success: false,
-        message: "record not update",
-       
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Record update successfully",
-        editFir,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.json({
-      success: false,
-      message: "error while updating record...",
-    });
-  }
-};
-
-/////////////SINGLE RECORD //////////////////
-export const singleRecord = async (req, res) => {
-  try {
-    const { id } = await req.params;
-
-    const singlefir = await Fir.findById(id);
-
-    if (singlefir == null) {
-      // console.log(editFir);
-      return res.json({
-        success: true,
-        message: "record not found",
-       
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Record Found",
-        singlefir,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.json({
-      success: false,
-      message: "error while fetching single record...",
-    });
-  }
-};
-export const searchRecord = async (req, res) => {
-  try {
-    const { name } = req.query;
-    let query = {};
-
-    if (name) {
-      query.name = { $regex: new RegExp(name, "i") }; // Case-insensitive search
-    }
-
-    const fir = await Fir.find(query);
-
-    if (!fir || fir.length === 0) {
-      return res.status(200).json({
-        success: false,
-        message: "No record found",
-        fir: [],
-      });
-    }
-
-    return res.status(200).json({
+    await fir.save();
+    res.status(201).json({
       success: true,
-      message: `${fir.length} Record(s) found`,
+      message: 'FIR record created successfully',
       fir,
     });
   } catch (error) {
-    console.error("Error while searching record:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
+// Get all FIR Records
+export const getAllFirs = async (req, res) => {
+  try {
+    const firs = await Fir.find();
+    res.status(200).json({ success: true, firs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Get single FIR Record by ID
+export const getFirById = async (req, res) => {
+  try {
+    const fir = await Fir.findById(req.params.id);
+    if (!fir) {
+      return res.status(404).json({ success: false, message: 'FIR not found' });
+    }
+    res.status(200).json({ success: true, fir });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Search FIR Records
+// Controller function for searching FIRs
 
 
 
+// Update FIR Record
+export const updateFir = async (req, res) => {
+  const allowedFields = [
+    'Act1',
+    'Sections1',
+    'NameOfSuspect',
+    'Address',
+    'ComplainantName',
+    'ComplainantFatherorHusbandName',
+    'ComplainantOccupation',
+    'ComplainantAadharNo',
+    'ComplainantAddress'
+  ];
+
+  const updates = {};
+  for (const field of allowedFields) {
+    if (req.body[field] !== undefined) {
+      updates[field] = req.body[field];
+    }
+  }
+
+  try {
+    const updatedFIR = await Fir.findByIdAndUpdate(req.params.id, updates, { new: true });
+    res.status(200).json({ success: true, message: "FIR updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update FIR' });
+  }
+
+};
+
+// Delete FIR Record
+export const deleteFir = async (req, res) => {
+  try {
+    const fir = await Fir.findByIdAndDelete(req.params.id);
+    if (!fir) {
+      return res.status(404).json({ success: false, message: 'FIR not found' });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'FIR deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const searchFirs = async (req, res) => {
+  try {
+    const { ComplainantName, FIRno } = req.query;
+
+    const query = {};
+    if (ComplainantName) query.ComplainantName = { $regex: ComplainantName, $options: "i" };
+    if (FIRno) query.FIRno = { $regex: FIRno, $options: "i" };
+
+    const firs = await Fir.find(query);
+    res.status(200).json({ success: true, firs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

@@ -21,7 +21,7 @@ app.use("./Photos", express.static("Photos"));
 
 //////////////////user apis//////////
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/fir", firRoutes);
+app.use("/api/v1", firRoutes);
 app.use("/api/v1/missing", missingPerson);
 app.get("/home",(req,res)=>{
   res.json("hey iam working fine")

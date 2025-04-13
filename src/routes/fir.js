@@ -1,16 +1,20 @@
-import express from "express"
-import { allFir, deleteFir, editFir, newFir, searchRecord, singleRecord } from "../controller/fir.js";
+import express from 'express';
+import {
+  createFir,
+  getAllFirs,
+  getFirById,
+  searchFirs,
+  updateFir,
+  deleteFir,
+} from '../controller/fir.js';
 
-export const firRoutes=express.Router();
+export const firRoutes = express.Router();
 
-
-
-firRoutes.post("/new",newFir)
-
-firRoutes.delete("/:id",deleteFir)
-firRoutes.get("/all",allFir)
-firRoutes.put("/:id",editFir)
-firRoutes.get("/:id",singleRecord)
-firRoutes.get("/search/fir",searchRecord)
+firRoutes.post('/fir', createFir);
+firRoutes.get('/firs', getAllFirs);
+firRoutes.get('/fir/:id', getFirById);
+firRoutes.get('/firs/search', searchFirs);
+firRoutes.put('/fir/:id', updateFir);
+firRoutes.delete('/fir/:id', deleteFir);
 
 
